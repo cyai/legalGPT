@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-FAISS_INDEX = "/vectorstore"
+FAISS_INDEX = "legalGPT/vectorstore/"
 
 # Custom prompt template
 custom_prompt_template = """[INST] <<SYS>>
@@ -50,7 +50,7 @@ def chain(llm, db, prompt):
     Chain to be used for the chatbot.
     """
     qa_chain = RetrievalQA.from_chain_type(
-        lm=llm,
+        llm=llm,
         chain_type="stuff",
         retriever=db.as_retriever(search_kwargs={"k": 2}),
         return_source_documents=True,
@@ -58,6 +58,7 @@ def chain(llm, db, prompt):
     )
 
     return qa_chain
+
 
 def qa_pipeline():
     """
@@ -72,7 +73,6 @@ def qa_pipeline():
 
     prompt = prompt_template()
 
-    chain = chain(llm, db, prompt)
+    chain_output = chain(llm, db, prompt)
 
-    return chain
-
+    return chain_output
